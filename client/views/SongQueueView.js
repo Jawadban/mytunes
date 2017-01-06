@@ -8,13 +8,16 @@ var SongQueueView = Backbone.View.extend({
     this.collection.on('remove', function(song) {
       this.render();
     }, this);
+    return this.render();
   },
 
   render: function() {
-    this.$el.html('<div></div>');
-    this.$el.find('div').append(this.collection.map( function(song) {
-      return new SongQueueEntryView(song);
-    }));
+    var html = '<div> </div>';
+    this.$el.html(html);
+    var children = this.collection.map( function(song) {
+      return new SongQueueEntryView({model: song});
+    });
+    this.$el.find('div').append(children);
     return this.$el;
   }
 

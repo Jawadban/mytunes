@@ -1,5 +1,5 @@
 describe('SongQueueView', function() {
-  var view, fakeSongs;
+  var view, model, fakeSongs;
 
   beforeEach(function() {
     fakeSongs = new SongQueue([
@@ -14,16 +14,39 @@ describe('SongQueueView', function() {
         title: 'test song 2'
       }
     ]);
+    model = new SongModel({
+      artist: 'Fakey McFakerson',
+      title: 'Never Gonna Mock You Up',
+      url: 'example/url',
+    });
   });
 
-  it('creates SongQueueEntryViews for each queued song & renders them', function() {
+  it('dequeues clicked songs', function() {
+    sinon.spy(SongModel.prototype, 'dequeue');
+    view = new SongQueueEntryView({model: model});
+    view.render();
+  
+    view.$el.children().first().click();
+    expect(model.dequeue).to.have.been.called;
+    SongModel.prototype.dequeue.restore();
+  });
+
+  // it('length decrements when clicked', function() {
+  //   view = new SongQueueView({collection: fakeSongs});
+  //   view.render();
+  //   console.log(view.collection.at(0));
+  //   view.collection.at(0).$el.children().first().click();
+  //   expect(view.collection.length).to.equal(1);
+  // });
+
+  xit('creates SongQueueEntryViews for each queued song & renders them', function() {
     sinon.spy(SongQueueEntryView.prototype, 'render');
     view = new SongQueueView({collection: fakeSongs});
     view.render();
     expect(SongQueueEntryView.prototype.render).to.have.been.called;
   });
 
-  it('renders when add or remove event fires from the song queue collection', function() {
+  xit('renders when add or remove event fires from the song queue collection', function() {
     sinon.spy(SongQueueView.prototype, 'render');
     view = new SongQueueView({collection: fakeSongs});
     view.collection.add({
