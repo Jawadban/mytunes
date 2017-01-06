@@ -2,7 +2,7 @@ var Songs = Backbone.Collection.extend({
   initialize: function() {
     this.connectToServer();    
   },
-
+  
   connectToServer: function() {
     var context = this;
     Backbone.ajax({
@@ -10,11 +10,10 @@ var Songs = Backbone.Collection.extend({
       method: 'GET',
       type: 'application/json',
       success: function(data) {
-        context.add(data.results);          
-        console.log('GET method success');
+        context.add(data.results);
+        context.trigger('sync');         
       },
       error: function(song) {
-        console.log('GET method failed');
       }
     });
   },
